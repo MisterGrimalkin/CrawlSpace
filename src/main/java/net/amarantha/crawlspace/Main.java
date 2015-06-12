@@ -1,35 +1,59 @@
 package net.amarantha.crawlspace;
 
-import java.io.IOException;
-import com.pi4j.gpio.extension.mcp.MCP23017GpioProvider;
-import com.pi4j.gpio.extension.mcp.MCP23017Pin;
-import com.pi4j.io.gpio.*;
-import com.pi4j.io.i2c.I2CBus;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 
 public class Main {
 
-    public static void main(String[] args) {
+    private static long lastOff = 0;
+    private static boolean buttonDown = true;
+
+    public static void main(final String[] args) {
 
         System.out.println("Starting Crawl Space....");
 
-        try {
-            GpioController gpio = GpioFactory.getInstance();
-            MCP23017GpioProvider gpioProvider = new MCP23017GpioProvider(I2CBus.BUS_1, 0x21);
-            GpioPinDigitalOutput led = gpio.provisionDigitalOutputPin(gpioProvider, MCP23017Pin.GPIO_A0, PinState.LOW);
-            while ( true ) {
-                System.out.println("HIGH");
-                led.high();
-                Thread.sleep(1000);
-                System.out.println("LOW");
-                led.low();
-                Thread.sleep(1000);
+        AudioPlayer audioPlayer = new AudioPlayer();
+
+        SceneManager manager = new SceneManager(true);
+        manager.addScene(new Scene("1. Entry", audioPlayer, "test1.mp3", true, 3));
+        manager.addScene(new Scene("2. Lost", audioPlayer, "test2.mp3", false, 10));
+        manager.addScene(new Scene("3. Processing", audioPlayer, "test3.mp3", false, 10));
+        manager.addScene(new Scene("4. Escape", audioPlayer, "test4.mp3", false, 5));
+        manager.start();
+
+        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            try {
+                consoleReader.readLine();
+                audioPlayer.stop();
+                manager.next();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
         }
 
-
+//        try {
+//            GpioController gpio = GpioFactory.getInstance();
+//            MCP23017GpioProvider inputBus = new MCP23017GpioProvider(I2CBus.BUS_1, 0x20);
+//            MCP23017GpioProvider outputBus = new MCP23017GpioProvider(I2CBus.BUS_1, 0x21);
+//            final GpioPinDigitalInput myButton1 = gpio.provisionDigitalInputPin(inputBus, MCP23017Pin.GPIO_A0, PinPullResistance.OFF);
+//            myButton1.addListener((GpioPinListenerDigital) event -> {
+//                lastOff = System.currentTimeMillis();
+//                buttonDown = false;
+//            });
+//            GpioPinDigitalOutput led = gpio.provisionDigitalOutputPin(outputBus, MCP23017Pin.GPIO_A0, PinState.LOW);
+//            while ( true ) {
+//                if ( !buttonDown && System.currentTimeMillis() - lastOff >= 150 ) {
+//                    buttonDown = true;
+//                    led.toggle();
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
 }
+
