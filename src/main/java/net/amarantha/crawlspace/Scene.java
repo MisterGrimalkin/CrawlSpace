@@ -3,6 +3,8 @@ package net.amarantha.crawlspace;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
 
+import java.io.IOException;
+
 import static java.lang.Math.*;
 
 public class Scene {
@@ -31,9 +33,13 @@ public class Scene {
     }
 
     public void start() {
-        audioPlayer.playTrack(audioFilename, loopAudio);
+        try {
+            audioPlayer.playTrack(audioFilename, loopAudio);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("Started Scene " + sceneName);
-        audioPlayer.stop();
+//        audioPlayer.stop();
     }
 
     public void stop() {

@@ -57,7 +57,7 @@ public class SceneManager {
         if ( currentScene >= scenes.size() && loop ) {
             currentScene = 0;
         }
-//        startCurrent();
+        startCurrent();
     }
 
     public void stop() {
