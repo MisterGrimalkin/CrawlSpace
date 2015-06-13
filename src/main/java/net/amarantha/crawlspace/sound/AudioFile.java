@@ -1,4 +1,4 @@
-package net.amarantha.crawlspace;
+package net.amarantha.crawlspace.sound;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.FactoryRegistry;
@@ -17,9 +17,6 @@ public class AudioFile extends PlaybackListener implements Runnable {
     private boolean playing = false;
     private boolean loop = false;
 
-    public AudioFile(String filePath) {
-        this(filePath, false);
-    }
     public AudioFile(String filePath, boolean loop) {
         this.filePath = filePath;
         this.loop = loop;
@@ -65,7 +62,6 @@ public class AudioFile extends PlaybackListener implements Runnable {
         } catch (JavaLayerException ex) {
             ex.printStackTrace();
         }
-
     }
 
 }

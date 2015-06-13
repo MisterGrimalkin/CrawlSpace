@@ -1,4 +1,6 @@
-package net.amarantha.crawlspace;
+package net.amarantha.crawlspace.scene;
+
+import net.amarantha.crawlspace.light.LedOn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,18 +9,25 @@ import java.util.TimerTask;
 
 public class SceneManager {
 
+    private List<Scene> scenes = new ArrayList<>();
     private int currentScene = 0;
 
+    private long sceneStarted;
+
+    private boolean running = false;
     private boolean loop = false;
+
+    private Timer timer;
+
+    private Scene panicScene;
 
     public SceneManager() {
         this(false);
     }
 
-    private Timer timer;
-
     public SceneManager(boolean loop) {
         this.loop = loop;
+        panicScene = new Scene("PANIC!", new LedOn(), null, false, null);
     }
 
     private void checkScenes() {
@@ -28,11 +37,13 @@ public class SceneManager {
         }
     }
 
-    private long sceneStarted;
+    public List<Scene> getScenes() {
+        return scenes;
+    }
 
-    private boolean running = false;
-
-    private List<Scene> scenes = new ArrayList<>();
+    public int getCurrentScene() {
+        return currentScene;
+    }
 
     public void start() {
         if ( timer == null ) {
@@ -51,22 +62,42 @@ public class SceneManager {
     }
 
     public void next() {
-        stopCurrent();
-        currentScene++;
-        if ( currentScene >= scenes.size() && loop ) {
-            currentScene = 0;
+        if ( running ) {
+            stopCurrent();
+            currentScene++;
+            if ( currentScene < scenes.size() ) {
+                startCurrent();
+            } else {
+                if ( loop ) {
+                    start();
+                }
+            }
+        } else {
+            start();
         }
-        startCurrent();
     }
 
     public void stop() {
         stopCurrent();
     }
 
-    public void loadScene(int sceneNumber) {
-        stopCurrent();
-        currentScene = sceneNumber;
-        startCurrent();
+    public void panic() {
+        if ( running ) {
+            stopCurrent();
+        }
+        panicScene.start();
+        currentScene = -1;
+    }
+
+    public boolean loadScene(int sceneNumber) {
+        if ( sceneNumber>=0 && sceneNumber<scenes.size() ) {
+            stopCurrent();
+            currentScene = sceneNumber;
+            startCurrent();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void startCurrent() {
@@ -83,4 +114,5 @@ public class SceneManager {
     public void addScene(Scene scene) {
         scenes.add(scene);
     }
+
 }
