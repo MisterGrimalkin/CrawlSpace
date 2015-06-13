@@ -51,7 +51,6 @@ public class SceneManager {
     }
 
     public void next() {
-        System.out.println("Next");
         stopCurrent();
         currentScene++;
         if ( currentScene >= scenes.size() && loop ) {
@@ -71,14 +70,12 @@ public class SceneManager {
     }
 
     private void startCurrent() {
-        System.out.println("START");
         scenes.get(currentScene).start();
         sceneStarted = System.currentTimeMillis();
         running = true;
     }
 
     private void stopCurrent() {
-        System.out.println("STOP");
         scenes.get(currentScene).stop();
         running = false;
     }

@@ -1,13 +1,10 @@
 package net.amarantha.crawlspace;
 
 import javafx.application.Application;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.URL;
 
 
 public class Main extends Application {
@@ -24,20 +21,17 @@ public class Main extends Application {
 
         System.out.println("Starting Crawl Space....");
 
-        AudioPlayer audioPlayer = new AudioPlayer();
-
         SceneManager manager = new SceneManager(true);
-        manager.addScene(new Scene("1. Entry", audioPlayer, "test1.mp3", true, 5));
-        manager.addScene(new Scene("2. Lost", audioPlayer, "test2.mp3", false, 5));
-        manager.addScene(new Scene("3. Processing", audioPlayer, "test3.mp3", false, 5));
-        manager.addScene(new Scene("4. Escape", audioPlayer, "test4.mp3", false, 5));
+        manager.addScene(new Scene("1. Entry",      "test3.mp3",    true,   5));
+        manager.addScene(new Scene("2. Lost",       "test2.mp3",    false,  5));
+        manager.addScene(new Scene("3. Processing", "test1.mp3",    false,  20));
+        manager.addScene(new Scene("4. Escape",     "test4.mp3",    false,  20));
         manager.start();
 
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             try {
                 consoleReader.readLine();
-//                audioPlayer.stop();
                 manager.next();
             } catch (Exception ex) {
                 ex.printStackTrace();
