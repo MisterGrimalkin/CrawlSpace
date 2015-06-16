@@ -1,12 +1,11 @@
 var baseUrl = "192.168.0.18";
-var port = "8000";
+var port = "8001";
 
 function onLoad() {
     setInterval(function() { updateCurrentScene();}, 1000);
 }
 
 function loadScenes() {
-console.log("what");
     var req = new XMLHttpRequest();
     var panel = document.getElementById("sceneList");
     while (panel.firstChild) {

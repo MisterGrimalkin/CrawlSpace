@@ -11,6 +11,11 @@ import net.amarantha.crawlspace.scene.SceneManager;
 import net.amarantha.crawlspace.webservice.WebResource;
 import net.amarantha.crawlspace.webservice.WebService;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class Main extends Application {
 
     @Override
@@ -18,7 +23,9 @@ public class Main extends Application {
 
         System.out.println("Starting Crawl Space....");
 
-        WebService.startWebService(getParameters().getNamed().get("ip"));
+        loadConfig();
+
+        WebService.startWebService(ip);
 
         SceneManager manager = new SceneManager(false);
         WebResource.bindSceneManager(manager);
@@ -34,6 +41,24 @@ public class Main extends Application {
 
     public static void main(final String[] args) {
         launch(args);
+    }
+
+    private static String ip = null;
+
+    public static void loadConfig() {
+        try {
+            String message = "CrawlSpace configuration: ";
+            Properties prop = new Properties();
+            InputStream is = new FileInputStream("crawlspace.properties");
+            prop.load(is);
+            if ( prop.getProperty("ip")!=null ) {
+                ip = prop.getProperty("ip");
+                message += " serving on " + ip;
+            }
+            System.out.println(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

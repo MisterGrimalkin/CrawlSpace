@@ -18,7 +18,7 @@ public class WebService {
         server = null;
         if ( ip!=null ) {
             System.out.println("Starting Web Service....");
-            String fullUri = "http://"+ip+":8000/";
+            String fullUri = "http://"+ip+":8001/";
             final ResourceConfig rc = new ResourceConfig().packages("net.amarantha.crawlspace.webservice");
             rc.register(LoggingFilter.class);
             server = GrizzlyHttpServerFactory.createHttpServer(URI.create(fullUri), rc);
