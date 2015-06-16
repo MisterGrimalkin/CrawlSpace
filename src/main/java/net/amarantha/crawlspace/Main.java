@@ -2,6 +2,7 @@ package net.amarantha.crawlspace;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import net.amarantha.crawlspace.controller.ConsoleSceneController;
 import net.amarantha.crawlspace.controller.GpioSceneController;
 import net.amarantha.crawlspace.light.LedBlink;
 import net.amarantha.crawlspace.light.LedOff;
@@ -30,12 +31,17 @@ public class Main extends Application {
         SceneManager manager = new SceneManager(false);
         WebResource.bindSceneManager(manager);
 
-        manager.addScene(new Scene("1. Entry",      new LedOff(),       "test3.mp3",    true,   5.0));
-        manager.addScene(new Scene("2. Lost",       new LedOn(),        "test2.mp3",    true,   null));
-        manager.addScene(new Scene("3. Processing", new LedBlink(50),   "test1.mp3",    false,  20.0));
-        manager.addScene(new Scene("4. Escape",     new LedBlink(500),  "test4.mp3",    false,  20.0));
+        manager.addScene(new Scene("1. Entry",      new LedOff(),
+                "Crawlspace001.mp3",    false,   18.0));
+        manager.addScene(new Scene("2. Lost",       new LedOn(),
+                "Crawlspace002.mp3",    false,   23.0));
+        manager.addScene(new Scene("3. Processing", new LedBlink(50),
+                "Crawlspace003.mp3",    true,  null));
+        manager.addScene(new Scene("4. Escape",     new LedBlink(500),
+                "Crawlspace004.mp3",    false,  88.0));
 
         new GpioSceneController(manager).start();
+//        new ConsoleSceneController(manager).start();
 
     }
 

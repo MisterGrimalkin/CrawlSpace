@@ -27,7 +27,8 @@ public class SceneManager {
 
     public SceneManager(boolean loop) {
         this.loop = loop;
-        panicScene = new Scene("PANIC!", new LedOn(), null, false, null);
+        panicScene = new Scene("PANIC!", null,//new LedOn(),
+                null, false, null);
     }
 
     private void checkScenes() {
