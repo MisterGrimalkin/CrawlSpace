@@ -1,7 +1,5 @@
 package net.amarantha.crawlspace.scene;
 
-import net.amarantha.crawlspace.light.LedOn;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -20,6 +18,7 @@ public class SceneManager {
     private Timer timer;
 
     private Scene panicScene;
+    private int lastScene;
 
     public SceneManager() {
         this(false);
@@ -32,9 +31,11 @@ public class SceneManager {
     }
 
     private void checkScenes() {
-        Scene current = scenes.get(currentScene);
-        if ( current!=null && current.getSceneDuration()!=null && System.currentTimeMillis()-sceneStarted >= current.getSceneDuration() ) {
-            next();
+        if ( currentScene < scenes.size() ) {
+            Scene current = scenes.get(currentScene);
+            if (current != null && current.getSceneDuration() != null && System.currentTimeMillis() - sceneStarted >= current.getSceneDuration()) {
+                next();
+            }
         }
     }
 
@@ -64,7 +65,10 @@ public class SceneManager {
 
     public void next() {
         if ( running ) {
-            stopCurrent();
+            lastScene = currentScene;
+            if ( currentScene == scenes.size()-1) {
+                stopCurrent();
+            }
             currentScene++;
             if ( currentScene < scenes.size() ) {
                 startCurrent();
@@ -73,6 +77,7 @@ public class SceneManager {
                     start();
                 }
             }
+            stopLast();
         } else {
             start();
         }
@@ -98,6 +103,12 @@ public class SceneManager {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private void stopLast() {
+        if ( lastScene < scenes.size() ) {
+            scenes.get(lastScene).stop();
         }
     }
 

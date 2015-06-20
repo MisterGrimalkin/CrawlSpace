@@ -34,6 +34,7 @@ public class Scene {
         }
         if ( audioFilename!=null ) {
             audioFile = new AudioFile(audioFilename, loopAudio);
+            System.out.println(audioFilename);
             audioFile.play();
         }
     }

@@ -2,11 +2,7 @@ package net.amarantha.crawlspace;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import net.amarantha.crawlspace.controller.ConsoleSceneController;
 import net.amarantha.crawlspace.controller.GpioSceneController;
-import net.amarantha.crawlspace.light.LedBlink;
-import net.amarantha.crawlspace.light.LedOff;
-import net.amarantha.crawlspace.light.LedOn;
 import net.amarantha.crawlspace.scene.Scene;
 import net.amarantha.crawlspace.scene.SceneManager;
 import net.amarantha.crawlspace.webservice.WebResource;
@@ -31,14 +27,14 @@ public class Main extends Application {
         SceneManager manager = new SceneManager(false);
         WebResource.bindSceneManager(manager);
 
-        manager.addScene(new Scene("1. Entry",      new LedOff(),
-                "Crawlspace001.mp3",    false,   18.0));
-        manager.addScene(new Scene("2. Lost",       new LedOn(),
-                "Crawlspace002.mp3",    false,   23.0));
-        manager.addScene(new Scene("3. Processing", new LedBlink(50),
-                "Crawlspace003.mp3",    true,  null));
-        manager.addScene(new Scene("4. Escape",     new LedBlink(500),
-                "Crawlspace004.mp3",    false,  88.0));
+        manager.addScene(new Scene("ENTRY",      null,//new LedBlink(500),
+                "crawlspace-scene-1.mp3",    false,   24.0));
+        manager.addScene(new Scene("LOST",      null,//new LedBlink(500),
+                "crawlspace-scene-2.mp3",    false,   20.0));
+        manager.addScene(new Scene("PROCESSING",       null,//new LedBlink(50),
+                "crawlspace-scene-3.mp3",    true,   99.0));
+        manager.addScene(new Scene("ESCAPE", null,//new LedBlink(25),
+                "crawlspace-scene-4.mp3",    false,  60.0));
 
         new GpioSceneController(manager).start();
 //        new ConsoleSceneController(manager).start();
