@@ -58,7 +58,7 @@ public class WebResource {
     public static Response getCurrentScene() {
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
-                .entity(sceneManager.getCurrentScene()+1)
+                .entity(sceneManager.getCurrentSceneNumber()+1)
                 .build();
     }
 
@@ -104,7 +104,7 @@ public class WebResource {
     @Path("next-scene")
     @Produces(MediaType.TEXT_PLAIN)
     public static Response nextScene() {
-        sceneManager.next();
+        sceneManager.next(true);
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Scene Advanced")

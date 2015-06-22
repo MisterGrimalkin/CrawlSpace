@@ -18,11 +18,13 @@ public class GpioSceneController {
         GpioController gpio = GpioFactory.getInstance();
         final GpioPinDigitalInput myButton1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_UP);
         myButton1.addListener((GpioPinListenerDigital) event -> {
+            System.out.println("PRESS!");
             if ( lastTrigger==null || System.currentTimeMillis() - lastTrigger > 750 ) {
                 lastTrigger = System.currentTimeMillis();
-                sceneManager.next();
+                sceneManager.next(true);
             }
         });
+        System.out.println("CrawlSpace Running...........");
         while ( true ) {
         }
     }

@@ -1,5 +1,7 @@
 package net.amarantha.crawlspace.controller;
 
+import net.amarantha.crawlspace.scene.EventLoop;
+import net.amarantha.crawlspace.scene.EventManager;
 import net.amarantha.crawlspace.scene.SceneManager;
 
 import java.io.BufferedReader;
@@ -7,10 +9,11 @@ import java.io.InputStreamReader;
 
 public class ConsoleSceneController {
 
-    private SceneManager sceneManager;
+    private EventLoop loop;
+    private EventManager manager;
 
-    public ConsoleSceneController(SceneManager sceneManager) {
-        this.sceneManager = sceneManager;
+    public ConsoleSceneController(EventManager manager) {
+        this.manager = manager;
     }
 
     public void start() {
@@ -18,7 +21,14 @@ public class ConsoleSceneController {
         while (true) {
             try {
                 consoleReader.readLine();
-                sceneManager.next();
+                if ( manager.currentTimeBetween(26.0, 45.9) ) {
+                    System.out.println("jump-1");
+                    manager.jumpTo(46.0);
+                } else if ( manager.currentTimeBetween(46.0, 78.9) ) {
+                    System.out.println("jump-2");
+                    manager.jumpTo(79.0);
+                }
+//                loop.breakLoop();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

@@ -7,13 +7,15 @@ import java.util.TimerTask;
 
 public class SceneManager {
 
+    private Scene currentScene;
+
     private List<Scene> scenes = new ArrayList<>();
-    private int currentScene = 0;
+    private int currentSceneNumber = 0;
 
     private long sceneStarted;
 
     private boolean running = false;
-    private boolean loop = false;
+    private boolean loopAll = false;
 
     private Timer timer;
 
@@ -24,17 +26,16 @@ public class SceneManager {
         this(false);
     }
 
-    public SceneManager(boolean loop) {
-        this.loop = loop;
-        panicScene = new Scene("PANIC!", null,//new LedOn(),
-                null, false, null);
+    public SceneManager(boolean loopAll) {
+        this.loopAll = loopAll;
+        panicScene = new Scene("PANIC!", null, 0, null, false);
     }
 
     private void checkScenes() {
-        if ( currentScene < scenes.size() ) {
-            Scene current = scenes.get(currentScene);
-            if (current != null && current.getSceneDuration() != null && System.currentTimeMillis() - sceneStarted >= current.getSceneDuration()) {
-                next();
+        if ( currentSceneNumber < scenes.size() ) {
+            if (currentScene.getSceneDuration() != null
+                    && System.currentTimeMillis() - sceneStarted >= currentScene.getSceneDuration()) {
+                next(false);
             }
         }
     }
@@ -43,8 +44,8 @@ public class SceneManager {
         return scenes;
     }
 
-    public int getCurrentScene() {
-        return currentScene;
+    public int getCurrentSceneNumber() {
+        return currentSceneNumber;
     }
 
     public void start() {
@@ -57,27 +58,40 @@ public class SceneManager {
                         checkScenes();
                     }
                 }
-            }, 1000, 500);
+            }, 1000, 100);
         }
-        currentScene = 0;
-        startCurrent();
+        currentSceneNumber = 0;
+        currentScene = scenes.get(currentSceneNumber);
+        sceneStarted = System.currentTimeMillis();
+        running = true;
+        currentScene.start();
     }
 
-    public void next() {
+    public void next(boolean forceNext) {
         if ( running ) {
-            lastScene = currentScene;
-            if ( currentScene == scenes.size()-1) {
-                stopCurrent();
-            }
-            currentScene++;
-            if ( currentScene < scenes.size() ) {
-                startCurrent();
+            Scene nowPlaying = scenes.get(currentSceneNumber);
+            if ( !forceNext && nowPlaying.isLoopScene() ) {
+                nowPlaying.stop();
+                nowPlaying.start();
+                sceneStarted = System.currentTimeMillis();
             } else {
-                if ( loop ) {
-                    start();
+                Scene nextUp = null;
+                if ( ++currentSceneNumber < scenes.size() ) {
+                    nextUp = scenes.get(currentSceneNumber);
+                } else {
+                    currentSceneNumber = 0;
+                    if ( loopAll ) {
+                        nextUp = scenes.get(currentSceneNumber);
+                    }
+                }
+                nowPlaying.stop();
+                if ( nextUp!=null ) {
+                    sceneStarted = System.currentTimeMillis();
+                    nextUp.start();
+                } else {
+                    running = false;
                 }
             }
-            stopLast();
         } else {
             start();
         }
@@ -92,13 +106,23 @@ public class SceneManager {
             stopCurrent();
         }
         panicScene.start();
-        currentScene = -1;
+        currentSceneNumber = -1;
+    }
+
+    public void startScene(Scene scene) {
+        scene.start();
+        sceneStarted = System.currentTimeMillis();
+        running = true;
+    }
+
+    public void stopScene(Scene scene) {
+        scene.stop();
     }
 
     public boolean loadScene(int sceneNumber) {
         if ( sceneNumber>=0 && sceneNumber<scenes.size() ) {
             stopCurrent();
-            currentScene = sceneNumber;
+            currentSceneNumber = sceneNumber;
             startCurrent();
             return true;
         } else {
@@ -113,13 +137,13 @@ public class SceneManager {
     }
 
     private void startCurrent() {
-        scenes.get(currentScene).start();
+        scenes.get(currentSceneNumber).start();
         sceneStarted = System.currentTimeMillis();
         running = true;
     }
 
     private void stopCurrent() {
-        scenes.get(currentScene).stop();
+        scenes.get(currentSceneNumber).stop();
         running = false;
     }
 

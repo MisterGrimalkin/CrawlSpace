@@ -2,10 +2,9 @@ package net.amarantha.crawlspace;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import net.amarantha.crawlspace.controller.GpioSceneController;
-import net.amarantha.crawlspace.scene.Scene;
-import net.amarantha.crawlspace.scene.SceneManager;
-import net.amarantha.crawlspace.webservice.WebResource;
+import net.amarantha.crawlspace.controller.ConsoleSceneController;
+import net.amarantha.crawlspace.light.EStreamer;
+import net.amarantha.crawlspace.scene.*;
 import net.amarantha.crawlspace.webservice.WebService;
 
 import java.io.FileInputStream;
@@ -15,6 +14,19 @@ import java.util.Properties;
 
 public class Main extends Application {
 
+    private Event printStringEvent(String string) {
+        return new Event() {
+            @Override
+            public void onTrigger() {
+                System.out.println(string);
+            }
+            @Override
+            protected void onDispose() {
+
+            }
+        };
+    }
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -22,23 +34,39 @@ public class Main extends Application {
 
         loadConfig();
 
-        WebService.startWebService(ip);
+        if ( !getParameters().getUnnamed().contains("noserver") ) {
+            WebService.startWebService(ip);
+        }
 
-        SceneManager manager = new SceneManager(false);
-        WebResource.bindSceneManager(manager);
+        StartAudioEvent stage1Audio = new StartAudioEvent("crawlspace-scene-1.mp3");
+        StartAudioEvent stage2Audio = new StartAudioEvent("crawlspace-scene-2.mp3");
+        StartAudioEvent stage3Audio = new StartAudioEvent("crawlspace-scene-3.mp3");
+        StartAudioEvent stage4Audio = new StartAudioEvent("crawlspace-scene-4.mp3");
 
-        manager.addScene(new Scene("ENTRY",      null,//new LedBlink(500),
-                "crawlspace-scene-1.mp3",    false,   24.0));
-        manager.addScene(new Scene("LOST",      null,//new LedBlink(500),
-                "crawlspace-scene-2.mp3",    false,   20.0));
-        manager.addScene(new Scene("PROCESSING",       null,//new LedBlink(50),
-                "crawlspace-scene-3.mp3",    true,   99.0));
-        manager.addScene(new Scene("ESCAPE", null,//new LedBlink(25),
-                "crawlspace-scene-4.mp3",    false,  60.0));
 
-        new GpioSceneController(manager).start();
-//        new ConsoleSceneController(manager).start();
+        EventManager events = new EventManager();
 
+        events.loop(26.0, 45.9);
+        events.loop(46.0, 78.9);
+
+        events
+            // ENTRY
+            .addEvent(  0.0, stage1Audio)
+            // LOST
+            .addEvent(26.0, stage2Audio)
+            .addEvent(26.2, new StopAudioEvent(stage1Audio))
+            // PROCESSING
+            .addEvent(46.0, stage3Audio)
+            .addEvent(46.2, new StopAudioEvent(stage2Audio))
+            // ESCAPE
+            .addEvent(79.0, stage4Audio)
+            .addEvent(79.2, new StopAudioEvent(stage3Audio))
+            // END
+            .addEvent(136.0, new ShowStopper(events))
+        .startShow();
+
+//        new GpioSceneController(manager).start();
+        new ConsoleSceneController(events).start();
     }
 
     public static void main(final String[] args) {
@@ -56,6 +84,9 @@ public class Main extends Application {
             if ( prop.getProperty("ip")!=null ) {
                 ip = prop.getProperty("ip");
                 message += " serving on " + ip;
+            }
+            if ( prop.getProperty("streamerIp")!=null ) {
+                EStreamer.setStreamerIp(prop.getProperty("streamerIp"));
             }
             System.out.println(message);
         } catch (IOException e) {

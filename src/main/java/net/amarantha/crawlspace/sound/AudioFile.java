@@ -15,11 +15,9 @@ public class AudioFile extends PlaybackListener implements Runnable {
     private Thread playerThread;
 
     private boolean playing = false;
-    private boolean loop = false;
 
-    public AudioFile(String filePath, boolean loop) {
+    public AudioFile(String filePath) {
         this.filePath = filePath;
-        this.loop = loop;
     }
 
     public void play() {
@@ -39,7 +37,6 @@ public class AudioFile extends PlaybackListener implements Runnable {
 
     public void stop() {
         if ( playing ) {
-            loop = false;
             player.stop();
             playerThread = null;
         }
@@ -51,9 +48,6 @@ public class AudioFile extends PlaybackListener implements Runnable {
 
     public void playbackFinished(PlaybackEvent playbackEvent) {
         playing = false;
-        if ( loop ) {
-            play();
-        }
     }
 
     public void run() {
