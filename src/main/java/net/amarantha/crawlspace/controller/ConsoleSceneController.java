@@ -21,12 +21,19 @@ public class ConsoleSceneController {
         while (true) {
             try {
                 consoleReader.readLine();
+                if ( !manager.isRunning() ) {
+                    manager.startShow();
+                } else
                 if ( manager.currentTimeBetween(26.0, 45.9) ) {
                     System.out.println("jump-1");
-                    manager.jumpTo(46.0);
-                } else if ( manager.currentTimeBetween(46.0, 78.9) ) {
+                    manager.jumpTo(45.0);
+                } else
+                if ( manager.currentTimeBetween(46.0, 78.9) ) {
                     System.out.println("jump-2");
                     manager.jumpTo(79.0);
+                } else
+                if ( manager.getCurrentShowTime() >= 79000 ) {
+                    manager.stopShow();
                 }
 //                loop.breakLoop();
             } catch (Exception ex) {

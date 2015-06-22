@@ -4,38 +4,72 @@ import java.util.*;
 
 public class EventManager {
 
-    private Map<Long, Event> events = new HashMap<>();
+    private Map<Long, List<Event>> events = new HashMap<>();
 
     public boolean currentTimeBetween(double from, double to) {
         return currentShowTimeMilliseconds >= inMilliseconds(from)
                 && currentShowTimeMilliseconds <= inMilliseconds(to);
     }
 
+    public long getCurrentShowTime() {
+        return currentShowTimeMilliseconds;
+    }
+
     public EventManager addEvent(double seconds, Event event) {
-        events.put(inMilliseconds(seconds), event);
-        System.out.println(events.size() );
+        long timeMilliseconds = inMilliseconds(seconds);
+        List<Event> eventsAtThisTime = events.get(timeMilliseconds);
+        if ( eventsAtThisTime==null ) {
+            eventsAtThisTime = new ArrayList<>();
+            events.put(timeMilliseconds, eventsAtThisTime);
+        }
+        eventsAtThisTime.add(event);
         return this;
     }
 
     public EventLoop loop(double from, double to) {
         EventLoop loop = new EventLoop(this, from, to);
-//        addEvent(from, loop.disposeEvent());
         addEvent(to, loop);
         return loop;
+    }
+
+//    private boolean ignoreNextLoop = false;
+
+
+    public boolean isRunning() {
+        return running;
     }
 
     public void jumpTo(double seconds) {
         long newTime = inMilliseconds(seconds);
         if ( newTime < currentShowTimeMilliseconds ) {
             resetEventsBetween(newTime, currentShowTimeMilliseconds);
+        } else {
+            invalidateEventsBetween(currentShowTimeMilliseconds, newTime);
         }
+//        ignoreNextLoop = true;
         currentShowTimeMilliseconds = inMilliseconds(seconds);
     }
 
+    public void invalidateEventsBetween(long from, long to) {
+        for (Map.Entry<Long, List<Event>> entry : events.entrySet()) {
+            if (entry.getKey() >= from && entry.getKey() <= to) {
+                for (Event event : entry.getValue()) {
+                    event.invalidate();
+                }
+            }
+        }
+    }
+
     public void resetEventsBetween(long from, long to) {
-        for ( Map.Entry<Long, Event> entry : events.entrySet() ) {
-            if ( entry.getKey() >= from && entry.getKey()<=to && !(entry.getValue() instanceof EventLoop) ) {
-                entry.getValue().reset();
+        for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
+            if ( entry.getKey() >= from && entry.getKey()<=to) {
+                for ( Event event : entry.getValue() ) {
+//                    if ( event instanceof EventLoop ) {
+//
+//                    } else {
+                        event.reset();
+//                    }
+                }
             }
         }
     }
@@ -50,33 +84,57 @@ public class EventManager {
 
     private static final long TIME_RESOLUTION_MILLISECONDS = 100;
 
+    private boolean running = false;
+
     public void startShow() {
+        running = true;
         currentShowTimeMilliseconds = 0;
         if ( timer==null ) {
             timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    currentShowTimeMilliseconds += TIME_RESOLUTION_MILLISECONDS;
+                    double timeSeconds = (double)currentShowTimeMilliseconds/1000.0;
+                    if ( timeSeconds == (int)timeSeconds ) {
+                        System.out.println(timeSeconds);
+                    }
                     checkAndTriggerEvents();
-                    System.out.println((double)currentShowTimeMilliseconds/1000.0);
+                    currentShowTimeMilliseconds += TIME_RESOLUTION_MILLISECONDS;
                 }
             }, 0, TIME_RESOLUTION_MILLISECONDS);
         }
     }
 
     private void checkAndTriggerEvents() {
-        for ( Map.Entry<Long, Event> entry : events.entrySet() ) {
-            Event event = entry.getValue();
-            if ( !event.hasBeenTriggered() && entry.getKey()<currentShowTimeMilliseconds ) {
-                System.out.println("Fire event");
-                event.trigger();
+        for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
+            for ( Event event : entry.getValue() ) {
+                if (!event.hasBeenTriggered() && entry.getKey() <= currentShowTimeMilliseconds
+//                        && (event.getValidityEnd()==null || inMilliseconds(event.getValidityEnd())>currentShowTimeMilliseconds)
+                        ) {
+//                    if ( !ignoreNextLoop ) {
+                        System.out.println("Fire event " + event.id + " (" + event.getClass().getName() + ") at " + ((double) currentShowTimeMilliseconds / 1000));
+                        event.trigger();
+//                    } else {
+//                        if ( event instanceof EventLoop ) {
+//                            ignoreNextLoop = false;
+//                        } else {
+//                            System.out.println("fire event " + event.id + " (" + event.getClass().getName() + ") at " + ((double) currentShowTimeMilliseconds / 1000));
+//                            event.trigger();
+//                        }
+//                    }
+                }
             }
         }
+//        ignoreNextLoop = false;
     }
 
     public void stopShow() {
-        System.exit(0);
+        running = false;
+        for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
+            for ( Event event : entry.getValue() ) {
+                event.reset();
+            }
+        }
     }
 
 }

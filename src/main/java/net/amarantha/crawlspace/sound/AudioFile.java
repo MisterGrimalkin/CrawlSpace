@@ -27,7 +27,7 @@ public class AudioFile extends PlaybackListener implements Runnable {
             player = new AdvancedPlayer(new URL(urlAsString).openStream(), FactoryRegistry.systemRegistry().createAudioDevice());
             player.setPlayBackListener(this);
 
-            playerThread = new Thread(this, "AudioPlayerThread");
+            playerThread = new Thread(this);
             playerThread.start();
         }
         catch (Exception ex) {

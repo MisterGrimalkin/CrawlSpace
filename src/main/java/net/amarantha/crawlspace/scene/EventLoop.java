@@ -15,6 +15,7 @@ public class EventLoop extends Event {
         this.events = events;
         this.from = from;
         this.to = to;
+        setValidityEnd(to);
     }
 
     public void breakLoop() {
@@ -39,18 +40,4 @@ public class EventLoop extends Event {
         loopEnabled = true;
     }
 
-    public Event disposeEvent() {
-        return new Event() {
-            @Override
-            public void onTrigger() {
-                loopActive = false;
-            }
-
-            @Override
-            protected void onDispose() {
-
-            }
-        };
-
-    }
 }
