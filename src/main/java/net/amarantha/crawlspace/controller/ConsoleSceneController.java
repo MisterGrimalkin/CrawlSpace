@@ -24,18 +24,15 @@ public class ConsoleSceneController {
                 if ( !manager.isRunning() ) {
                     manager.startShow();
                 } else
-                if ( manager.currentTimeBetween(26.0, 45.9) ) {
-                    System.out.println("jump-1");
-                    manager.jumpTo(45.0);
+                if ( manager.currentTimeBetween(25.0, 44.0) ) {
+                    manager.jumpTo(43.5);
                 } else
-                if ( manager.currentTimeBetween(46.0, 78.9) ) {
-                    System.out.println("jump-2");
-                    manager.jumpTo(79.0);
+                if ( manager.currentTimeBetween(45.0, 76.0) ) {
+                    manager.jumpTo(75.5);
                 } else
-                if ( manager.getCurrentShowTime() >= 79000 ) {
+                if ( manager.getCurrentShowTime() > 76.0 ) {
                     manager.stopShow();
                 }
-//                loop.breakLoop();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

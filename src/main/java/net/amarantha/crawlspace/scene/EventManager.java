@@ -11,9 +11,11 @@ public class EventManager {
                 && currentShowTimeMilliseconds <= inMilliseconds(to);
     }
 
-    public long getCurrentShowTime() {
+    public long getCurrentShowTimeMilliseconds() {
         return currentShowTimeMilliseconds;
     }
+
+    public double getCurrentShowTime() { return currentShowTimeMilliseconds/1000.0; }
 
     public EventManager addEvent(double seconds, Event event) {
         long timeMilliseconds = inMilliseconds(seconds);
@@ -26,14 +28,11 @@ public class EventManager {
         return this;
     }
 
-    public EventLoop loop(double from, double to) {
+    public EventManager loop(double from, double to) {
         EventLoop loop = new EventLoop(this, from, to);
         addEvent(to, loop);
-        return loop;
+        return this;
     }
-
-//    private boolean ignoreNextLoop = false;
-
 
     public boolean isRunning() {
         return running;
@@ -46,7 +45,6 @@ public class EventManager {
         } else {
             invalidateEventsBetween(currentShowTimeMilliseconds, newTime);
         }
-//        ignoreNextLoop = true;
         currentShowTimeMilliseconds = inMilliseconds(seconds);
     }
 
@@ -63,13 +61,7 @@ public class EventManager {
     public void resetEventsBetween(long from, long to) {
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
             if ( entry.getKey() >= from && entry.getKey()<=to) {
-                for ( Event event : entry.getValue() ) {
-//                    if ( event instanceof EventLoop ) {
-//
-//                    } else {
-                        event.reset();
-//                    }
-                }
+                entry.getValue().forEach(Event::reset);
             }
         }
     }
@@ -94,12 +86,14 @@ public class EventManager {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    double timeSeconds = (double)currentShowTimeMilliseconds/1000.0;
-                    if ( timeSeconds == (int)timeSeconds ) {
-                        System.out.println(timeSeconds);
+                    if ( running ) {
+                        double timeSeconds = (double) currentShowTimeMilliseconds / 1000.0;
+                        if (timeSeconds == (int) timeSeconds) {
+                            System.out.println(timeSeconds);
+                        }
+                        checkAndTriggerEvents();
+                        currentShowTimeMilliseconds += TIME_RESOLUTION_MILLISECONDS;
                     }
-                    checkAndTriggerEvents();
-                    currentShowTimeMilliseconds += TIME_RESOLUTION_MILLISECONDS;
                 }
             }, 0, TIME_RESOLUTION_MILLISECONDS);
         }
@@ -109,31 +103,18 @@ public class EventManager {
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
             for ( Event event : entry.getValue() ) {
                 if (!event.hasBeenTriggered() && entry.getKey() <= currentShowTimeMilliseconds
-//                        && (event.getValidityEnd()==null || inMilliseconds(event.getValidityEnd())>currentShowTimeMilliseconds)
                         ) {
-//                    if ( !ignoreNextLoop ) {
-                        System.out.println("Fire event " + event.id + " (" + event.getClass().getName() + ") at " + ((double) currentShowTimeMilliseconds / 1000));
+                        System.out.println("Fire event " + event.id + " (" + event.getClass().getSimpleName() + ") at " + ((double) currentShowTimeMilliseconds / 1000));
                         event.trigger();
-//                    } else {
-//                        if ( event instanceof EventLoop ) {
-//                            ignoreNextLoop = false;
-//                        } else {
-//                            System.out.println("fire event " + event.id + " (" + event.getClass().getName() + ") at " + ((double) currentShowTimeMilliseconds / 1000));
-//                            event.trigger();
-//                        }
-//                    }
                 }
             }
         }
-//        ignoreNextLoop = false;
     }
 
     public void stopShow() {
         running = false;
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
-            for ( Event event : entry.getValue() ) {
-                event.reset();
-            }
+            entry.getValue().forEach(Event::reset);
         }
     }
 

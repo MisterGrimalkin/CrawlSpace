@@ -46,25 +46,23 @@ public class Main extends Application {
 
         EventManager events = new EventManager();
 
-        events.loop(25.0, 44.0);
-        events.loop(46.0, 79.0);
-
-
         events
-            // ENTRY
-            .addEvent(  0.0, stage1Audio)
-            // LOST
-            .addEvent(25.0, stage2Audio)
-            .addEvent(26.0, new StopAudioEvent(stage1Audio))
-            // PROCESSING
-            .addEvent(46.0, stage3Audio)
-            .addEvent(46.0, new StopAudioEvent(stage2Audio))
-            // ESCAPE
-            .addEvent(80.0, stage4Audio)
-            .addEvent(80.0, new StopAudioEvent(stage3Audio))
-            // END
-            .addEvent(135.0, new ShowStopper(events));
-//        .startShow();
+            .addEvent   (  0.0, stage1Audio)
+
+            .loop       ( 25.0, 43.0 )
+
+            .addEvent   ( 25.0, stage2Audio)
+            .addEvent   ( 26.0, new StopAudioEvent(stage1Audio))
+
+            .loop       ( 44.0, 75.0 )
+
+            .addEvent   ( 44.0, stage3Audio)
+            .addEvent   ( 45.0, new StopAudioEvent(stage2Audio))
+
+            .addEvent   ( 76.0, stage4Audio)
+            .addEvent   ( 77.0, new StopAudioEvent(stage3Audio))
+
+            .addEvent   (133.0, new ShowStopper(events));
 
 //        new GpioSceneController(manager).start();
         new ConsoleSceneController(events).start();
