@@ -16,7 +16,7 @@ public class GpioSceneController {
         GpioController gpio = GpioFactory.getInstance();
         final GpioPinDigitalInput myButton1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_UP);
         myButton1.addListener((GpioPinListenerDigital) event -> {
-            if ( event.getState()==PinState.LOW ) {
+            if ( event.getState()==PinState.HIGH ) {
                 if ( !events.isRunning() ) {
                     events.startShow();
                 } else
