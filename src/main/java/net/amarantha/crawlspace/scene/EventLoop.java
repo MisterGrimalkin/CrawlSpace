@@ -15,7 +15,6 @@ public class EventLoop extends Event {
         this.events = events;
         this.from = from;
         this.to = to;
-        setValidityEnd(to);
     }
 
     public void breakLoop() {

@@ -3,10 +3,11 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="crawlspace.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
-    <title>LightBoard Control Panel</title>
+    <title>Crawlspace</title>
 </head>
 <script src="controller.js"></script>
 <script>
@@ -24,24 +25,28 @@
 
     <div style="width:50%; float:left;">
         <div class="container-fluid">
-            <h2>Scenes</h2>
-            <div id="sceneList">
-                <button id="scene1" type="button" onclick="loadScene(1)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Entry</button>
-                <button id="scene2" type="button" onclick="loadScene(2)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Lost</button>
-                <button id="scene3" type="button" onclick="loadScene(3)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Processing</button>
-                <button id="scene4" type="button" onclick="loadScene(4)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Escape</button>
+            <div id="currentTime"></div>
+            <div style="margin: auto; float: center; text-align: center;">
+                <button class="btn-success" style="width: 40%; height: 70px;" type="BUTTON" onclick="startShow()">PLAY</button>
+                <button class="btn-danger" style="width: 40%; height: 70px;" type="BUTTON" onclick="stopShow()">STOP</button>
             </div>
-            <button type="button" onclick="panic()" class="btn-danger" style="width: 100%; float: left; margin-top: 10px; height: 60px; font-size: 40px;">PANIC</button>
+            <!--<div id="sceneList">-->
+                <!--<button id="scene1" type="button" onclick="loadScene(1)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Entry</button>-->
+                <!--<button id="scene2" type="button" onclick="loadScene(2)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Lost</button>-->
+                <!--<button id="scene3" type="button" onclick="loadScene(3)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Processing</button>-->
+                <!--<button id="scene4" type="button" onclick="loadScene(4)" class="btn-primary" style="width: 100%; float: left; margin-bottom: 5px; height: 50px; font-size: 30px;">Escape</button>-->
+            <!--</div>-->
+            <!--<button type="button" onclick="panic()" class="btn-danger" style="width: 100%; float: left; margin-top: 10px; height: 60px; font-size: 40px;">PANIC</button>-->
         </div>
     </div>
 
-    <div style="width:50%; float:left;">
+    <div style="width:50%; float:right;">
         <div class="container-fluid">
-            <h2>Controls</h2>
-            <button type="button" onclick="start()" class="btn-success" style="width: 25%; float: left; margin-left: 10px; height: 40px;">Start</button>
-            <button type="button" onclick="next()" class="btn-primary" style="width: 25%; float: left; height: 40px;">Next</button>
-            <button type="button" onclick="stop()" class="btn-warning" style="width: 25%; float: left; margin-right: 10px; height: 40px;">Stop</button>
-            <button type="button" onclick="shutdown()" class="btn-danger" style="width: 75%; float: left; margin: 10px; height: 40px;">Shutdown</button>
+            <button id="scene1" type="button" onclick="jumpTo(0.0)" class="btn-primary" style="width: 100%; margin: auto; margin-top: 10px;">Scene 1 (Entry)</button>
+            <button id="scene2" type="button" onclick="jumpTo(24.0)" class="btn-primary" style="width: 100%; margin: auto; margin-top: 10px;">Scene 2 (Lost)</button>
+            <button id="scene3" type="button" onclick="jumpTo(43.5)" class="btn-primary" style="width: 100%; margin: auto; margin-top: 10px;">Scene 3 (Processing)</button>
+            <button id="scene4" type="button" onclick="jumpTo(75.5)" class="btn-primary" style="width: 100%; margin: auto; margin-top: 10px;">Scene 4 (Escape)</button>
+            <button type="button" onclick="panic()" class="btn-danger" style="font-size: 30px; width: 100%; height: 100px; margin: auto; margin-top: 20px;">P A N I C</button>
         </div>
     </div>
 

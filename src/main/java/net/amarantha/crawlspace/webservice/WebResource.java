@@ -1,29 +1,25 @@
 package net.amarantha.crawlspace.webservice;
 
-import net.amarantha.crawlspace.scene.Scene;
-import net.amarantha.crawlspace.scene.SceneManager;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import net.amarantha.crawlspace.scene.EventManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
-@Path("/")
+@Path("crawlspace")
 public class WebResource {
 
-    private static SceneManager sceneManager;
+    private static EventManager events;
 
-    public static void bindSceneManager(SceneManager sceneManager) {
-        WebResource.sceneManager = sceneManager;
+    public static void setEventManager(EventManager events) {
+        WebResource.events = events;
     }
 
     @POST
     @Path("panic")
     @Produces(MediaType.TEXT_PLAIN)
     public static Response panic() {
-        sceneManager.panic();
+        events.panic();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Panic Scene Activated")
@@ -34,7 +30,7 @@ public class WebResource {
     @Path("stop")
     @Produces(MediaType.TEXT_PLAIN)
     public static Response stop() {
-        sceneManager.stop();
+        events.stopShow();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Stopped")
@@ -45,7 +41,7 @@ public class WebResource {
     @Path("start")
     @Produces(MediaType.TEXT_PLAIN)
     public static Response start() {
-        sceneManager.start();
+        events.startShow();
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
                 .entity("Started")
@@ -53,67 +49,30 @@ public class WebResource {
     }
 
     @GET
-    @Path("current-scene")
+    @Path("current-time")
     @Produces(MediaType.TEXT_PLAIN)
     public static Response getCurrentScene() {
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
-                .entity(sceneManager.getCurrentSceneNumber()+1)
-                .build();
-    }
-
-    @GET
-    @Path("scenes")
-    @Produces(MediaType.TEXT_PLAIN)
-    public static Response getScenes() {
-        JSONObject json = new JSONObject();
-        JSONArray ja = new JSONArray();
-        List<Scene> scenes = sceneManager.getScenes();
-        for ( int i=0; i<scenes.size(); i++ ) {
-            Scene scene = scenes.get(i);
-            JSONObject obj = new JSONObject();
-            obj.put("id", i+1);
-            obj.put("name", scene.getName());
-            ja.add(obj);
-        }
-        json.put("scenes", ja);
-        return Response.ok()
-                .header("Access-Control-Allow-Origin", "*")
-                .entity(json.toString())
+                .entity(events.isRunning() ? events.getCurrentShowTime() : -1)
                 .build();
     }
 
     @POST
-    @Path("load-scene")
+    @Path("jump-to")
     @Produces(MediaType.TEXT_PLAIN)
-    public static Response loadScene(@QueryParam("id") int id) {
-        if ( sceneManager.loadScene(id-1) ) {
-            return Response.ok()
-                    .header("Access-Control-Allow-Origin", "*")
-                    .entity("Scene Loaded")
-                    .build();
-        } else {
-            return Response.serverError()
-                    .header("Access-Control-Allow-Origin", "*")
-                    .entity("Scene Not Found")
-                    .build();
-        }
-    }
-
-    @POST
-    @Path("next-scene")
-    @Produces(MediaType.TEXT_PLAIN)
-    public static Response nextScene() {
-        sceneManager.next(true);
+    public static Response jumpTo(@QueryParam("time") double time) {
+        events.jumpTo(time);
         return Response.ok()
                 .header("Access-Control-Allow-Origin", "*")
-                .entity("Scene Advanced")
+                .entity(events.getCurrentShowTime())
                 .build();
     }
 
     @POST
     @Path("shutdown")
     public static void shutdown() {
+        events.stopShow();
         System.exit(0);
     }
 

@@ -2,7 +2,6 @@ package net.amarantha.crawlspace.controller;
 
 import net.amarantha.crawlspace.scene.EventLoop;
 import net.amarantha.crawlspace.scene.EventManager;
-import net.amarantha.crawlspace.scene.SceneManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

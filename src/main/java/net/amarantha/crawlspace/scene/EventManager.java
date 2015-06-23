@@ -11,6 +11,8 @@ public class EventManager {
                 && currentShowTimeMilliseconds <= inMilliseconds(to);
     }
 
+
+
     public long getCurrentShowTimeMilliseconds() {
         return currentShowTimeMilliseconds;
     }
@@ -116,6 +118,11 @@ public class EventManager {
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
             entry.getValue().forEach(Event::reset);
         }
+    }
+
+    public void panic() {
+        stopShow();
+        // panic scene
     }
 
 }

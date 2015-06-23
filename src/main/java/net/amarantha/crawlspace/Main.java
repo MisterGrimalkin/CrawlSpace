@@ -3,8 +3,10 @@ package net.amarantha.crawlspace;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import net.amarantha.crawlspace.controller.ConsoleSceneController;
+import net.amarantha.crawlspace.controller.GpioSceneController;
 import net.amarantha.crawlspace.light.EStreamer;
 import net.amarantha.crawlspace.scene.*;
+import net.amarantha.crawlspace.webservice.WebResource;
 import net.amarantha.crawlspace.webservice.WebService;
 
 import java.io.FileInputStream;
@@ -45,9 +47,10 @@ public class Main extends Application {
 
 
         EventManager events = new EventManager();
+        WebResource.setEventManager(events);
 
         events
-            .addEvent   (  0.0, stage1Audio)
+            .addEvent(0.0, stage1Audio)
 
             .loop       ( 25.0, 43.0 )
 
@@ -64,8 +67,8 @@ public class Main extends Application {
 
             .addEvent   (133.0, new ShowStopper(events));
 
-//        new GpioSceneController(manager).start();
-        new ConsoleSceneController(events).start();
+        new GpioSceneController(events).start();
+//        new ConsoleSceneController(events).start();
     }
 
     public static void main(final String[] args) {
