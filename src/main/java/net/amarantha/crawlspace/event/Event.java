@@ -1,4 +1,4 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 public abstract class Event {
 
@@ -14,7 +14,7 @@ public abstract class Event {
 
     public abstract void onTrigger();
 
-    protected abstract void onDispose();
+    protected abstract void onReset();
 
     public final void trigger() {
         triggered = true;
@@ -23,7 +23,7 @@ public abstract class Event {
 
     public final void reset() {
         triggered = false;
-        onDispose();
+        onReset();
     }
 
     public final void invalidate() {

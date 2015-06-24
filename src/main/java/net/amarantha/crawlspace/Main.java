@@ -5,7 +5,9 @@ import javafx.stage.Stage;
 import net.amarantha.crawlspace.controller.ConsoleSceneController;
 import net.amarantha.crawlspace.controller.GpioSceneController;
 import net.amarantha.crawlspace.light.EStreamer;
-import net.amarantha.crawlspace.scene.*;
+import net.amarantha.crawlspace.light.MadrixInterface;
+import net.amarantha.crawlspace.light.MadrixEvent;
+import net.amarantha.crawlspace.event.*;
 import net.amarantha.crawlspace.webservice.WebResource;
 import net.amarantha.crawlspace.webservice.WebService;
 
@@ -23,7 +25,7 @@ public class Main extends Application {
                 System.out.println(string);
             }
             @Override
-            protected void onDispose() {
+            protected void onReset() {
 
             }
         };
@@ -40,35 +42,79 @@ public class Main extends Application {
             WebService.startWebService(ip);
         }
 
-        StartAudioEvent stage1Audio = new StartAudioEvent("crawlspace-scene-1.mp3");
-        StartAudioEvent stage2Audio = new StartAudioEvent("crawlspace-scene-2.mp3");
-        StartAudioEvent stage3Audio = new StartAudioEvent("crawlspace-scene-3.mp3");
-        StartAudioEvent stage4Audio = new StartAudioEvent("crawlspace-scene-4.mp3");
+        AudioEvent doorSlamAndWaves = new AudioEvent("crawlspace-scene-1.mp3");
+        AudioEvent atmosphericGurgling = new AudioEvent("crawlspace-scene-2.mp3");
+        AudioEvent loudMechanicalNoise = new AudioEvent("crawlspace-scene-3.mp3");
+        AudioEvent fadeOut = new AudioEvent("crawlspace-scene-4.mp3");
 
+        MadrixInterface madrix = new MadrixInterface("2.0.0.33");
 
-        EventManager events = new EventManager();
+        EventManager events = new EventManager(madrix);
         WebResource.setEventManager(events);
 
+        madrix.bulkhead().trigger();
+//        madrix.fullLineWhiteStrobe().trigger();
+
         events
-            .addEvent(0.0, stage1Audio)
+                .addEvent   (0.0, doorSlamAndWaves)
+                .addEvent   (0.0, madrix.bulkhead())
+                .addEvent   (1.1, madrix.darkness())
 
-            .loop       ( 25.0, 43.0 )
+                .addEvent   (4.5, madrix.wavesLow())
+                .addEvent   (6.0, madrix.wavesHigh())
+                .addEvent   (7.5, madrix.wavesLow())
+                .addEvent   (10.0, madrix.wavesHigh())
+                .addEvent   (15.0, madrix.wavesLow())
+                .addEvent   (18.0, madrix.wavesHigh())
+                .addEvent   (20.0, madrix.wavesLow())
+                .addEvent   (25.0, madrix.darkness())
 
-            .addEvent   ( 25.0, stage2Audio)
-            .addEvent   ( 26.0, new StopAudioEvent(stage1Audio))
+                .loop(25.0, 43.0)
 
-            .loop       ( 44.0, 75.0 )
+                .addEvent   ( 25.0, atmosphericGurgling)
+                .addEvent   ( 26.0, doorSlamAndWaves.stop())
 
-            .addEvent   ( 44.0, stage3Audio)
-            .addEvent   ( 45.0, new StopAudioEvent(stage2Audio))
+                .addEvent   (25.0, madrix.darkness())
+                .addEvent   (28.0, madrix.spot2())
+                .addEvent   (31.0, madrix.spot23())
+                .addEvent   (34.0, madrix.spot234())
+                .addEvent   (37.0, madrix.spot345())
+                .addEvent   (40.0, madrix.spot456())
+//                .addEvent   (36.0, madrix.spot567())
+//                .addEvent   (38.0, madrix.spot678())
+//                .addEvent   (40.0, madrix.spot789())
+//                .addEvent   (42.0, madrix.spot89())
+//                .addEvent   (44.0, madrix.spot9())
+//                .addEvent   (40.0, madrix.spot9())
 
-            .addEvent   ( 76.0, stage4Audio)
-            .addEvent   ( 77.0, new StopAudioEvent(stage3Audio))
+                .loop(44.0, 75.0)
 
-            .addEvent   (133.0, new ShowStopper(events));
+                .addEvent   ( 44.0, loudMechanicalNoise)
+                .addEvent   ( 44.0, madrix.fullLineWhiteStrobe())
+                .addEvent   ( 45.0, atmosphericGurgling.stop())
+                .addEvent   ( 46.0, madrix.fallingRedFast())
+                .addEvent   ( 48.5, madrix.fallingWhite())
+                .addEvent   ( 52.0, madrix.fallingRedSlow())
+                .addEvent   ( 54.0, madrix.fullLineWhiteStrobe())
+                .addEvent   ( 56.0, madrix.fallingWhite())
+                .addEvent   ( 58.0, madrix.fallingRedFast())
+                .addEvent   ( 61.0, madrix.fullLineWhiteStrobe())
+                .addEvent   ( 64.0, madrix.fallingRedFast())
+                .addEvent   ( 66.0, madrix.fullLineWhiteStrobe())
+                .addEvent   ( 67.0, madrix.fallingRedSlow())
+                .addEvent   ( 70.0, madrix.fullLineWhiteStrobe())
+                .addEvent   ( 72.0, madrix.fallingRedFast())
 
-        new GpioSceneController(events).start();
-//        new ConsoleSceneController(events).start();
+                .addEvent   ( 76.0, madrix.watery())
+
+
+                .addEvent   ( 76.0, fadeOut)
+                .addEvent   ( 77.0, loudMechanicalNoise.stop())
+
+                .addEvent(133.0, events.stop());
+
+//        new GpioSceneController(events).start();
+        new ConsoleSceneController(events).start();
     }
 
     public static void main(final String[] args) {

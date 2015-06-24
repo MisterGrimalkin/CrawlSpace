@@ -1,4 +1,4 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 import java.util.ArrayList;
 import java.util.List;

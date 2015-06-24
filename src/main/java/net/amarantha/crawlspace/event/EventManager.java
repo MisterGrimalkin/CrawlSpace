@@ -1,17 +1,28 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
+
+import net.amarantha.crawlspace.light.MadrixEvent;
+import net.amarantha.crawlspace.light.MadrixInterface;
 
 import java.util.*;
 
 public class EventManager {
 
+    private MadrixInterface madrix;
+
     private Map<Long, List<Event>> events = new HashMap<>();
+
+    public EventManager(MadrixInterface madrix) {
+        this.madrix = madrix;
+    }
 
     public boolean currentTimeBetween(double from, double to) {
         return currentShowTimeMilliseconds >= inMilliseconds(from)
                 && currentShowTimeMilliseconds <= inMilliseconds(to);
     }
 
-
+    public Event stop() {
+        return new ShowStopper(this);
+    }
 
     public long getCurrentShowTimeMilliseconds() {
         return currentShowTimeMilliseconds;
@@ -115,6 +126,7 @@ public class EventManager {
 
     public void stopShow() {
         running = false;
+        madrix.bulkhead().trigger();
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
             entry.getValue().forEach(Event::reset);
         }
@@ -122,7 +134,7 @@ public class EventManager {
 
     public void panic() {
         stopShow();
-        // panic scene
+        madrix.fullOn().trigger();
     }
 
 }

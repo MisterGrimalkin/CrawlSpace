@@ -1,4 +1,4 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 public class EventLoop extends Event {
 
@@ -34,7 +34,7 @@ public class EventLoop extends Event {
     }
 
     @Override
-    protected void onDispose() {
+    protected void onReset() {
         loopActive = false;
         loopEnabled = true;
     }

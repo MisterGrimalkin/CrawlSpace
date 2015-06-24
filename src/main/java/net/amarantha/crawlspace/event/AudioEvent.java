@@ -1,13 +1,13 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 import net.amarantha.crawlspace.sound.AudioFile;
 
-public class StartAudioEvent extends Event {
+public class AudioEvent extends Event {
 
     private String fileName;
     private AudioFile audioFile;
 
-    public StartAudioEvent(String fileName) {
+    public AudioEvent(String fileName) {
         this.fileName = fileName;
         audioFile = new AudioFile(fileName);
     }
@@ -18,11 +18,15 @@ public class StartAudioEvent extends Event {
     }
 
     @Override
-    protected void onDispose() {
+    protected void onReset() {
         audioFile.stop();
     }
 
     public AudioFile getAudioFile() {
         return audioFile;
+    }
+
+    public Event stop() {
+        return new StopAudioEvent(this);
     }
 }

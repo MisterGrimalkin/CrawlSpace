@@ -1,10 +1,10 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 public class StopAudioEvent extends Event {
 
-    private StartAudioEvent audioEvent;
+    private AudioEvent audioEvent;
 
-    public StopAudioEvent(StartAudioEvent audioEvent) {
+    public StopAudioEvent(AudioEvent audioEvent) {
         this.audioEvent = audioEvent;
     }
 
@@ -14,5 +14,5 @@ public class StopAudioEvent extends Event {
     }
 
     @Override
-    protected void onDispose() { }
+    protected void onReset() { }
 }

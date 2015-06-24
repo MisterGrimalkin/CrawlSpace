@@ -2,7 +2,7 @@ package net.amarantha.crawlspace.controller;
 
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
-import net.amarantha.crawlspace.scene.EventManager;
+import net.amarantha.crawlspace.event.EventManager;
 
 public class GpioSceneController {
 

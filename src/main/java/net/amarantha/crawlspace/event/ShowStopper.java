@@ -1,4 +1,4 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 public class ShowStopper extends Event {
 
@@ -14,7 +14,7 @@ public class ShowStopper extends Event {
     }
 
     @Override
-    protected void onDispose() {
+    protected void onReset() {
 
     }
 }

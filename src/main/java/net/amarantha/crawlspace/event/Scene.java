@@ -1,4 +1,4 @@
-package net.amarantha.crawlspace.scene;
+package net.amarantha.crawlspace.event;
 
 import net.amarantha.crawlspace.light.EStreamer;
 import net.amarantha.crawlspace.sound.AudioFile;

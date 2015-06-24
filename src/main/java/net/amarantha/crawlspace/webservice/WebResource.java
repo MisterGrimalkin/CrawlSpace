@@ -1,6 +1,6 @@
 package net.amarantha.crawlspace.webservice;
 
-import net.amarantha.crawlspace.scene.EventManager;
+import net.amarantha.crawlspace.event.EventManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
