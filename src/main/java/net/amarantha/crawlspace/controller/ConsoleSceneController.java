@@ -1,5 +1,6 @@
 package net.amarantha.crawlspace.controller;
 
+import net.amarantha.crawlspace.Main;
 import net.amarantha.crawlspace.event.EventLoop;
 import net.amarantha.crawlspace.event.EventManager;
 
@@ -23,13 +24,13 @@ public class ConsoleSceneController {
                 if ( !manager.isRunning() ) {
                     manager.startShow();
                 } else
-                if ( manager.currentTimeBetween(25.0, 44.0) ) {
-                    manager.jumpTo(43.5);
+                if ( manager.currentTimeBetween(0.0, Main.scene3Start) ) {
+                    manager.jumpTo(Main.scene3Start);
+//                } else
+//                if ( manager.currentTimeBetween(45.0, 76.0) ) {
+//                    manager.jumpTo(75.5);
                 } else
-                if ( manager.currentTimeBetween(45.0, 76.0) ) {
-                    manager.jumpTo(75.5);
-                } else
-                if ( manager.getCurrentShowTime() > 76.0 ) {
+                if ( manager.getCurrentShowTime() > Main.scene3Start ) {
                     manager.stopShow();
                 }
             } catch (Exception ex) {

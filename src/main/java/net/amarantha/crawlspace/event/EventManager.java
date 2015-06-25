@@ -1,6 +1,5 @@
 package net.amarantha.crawlspace.event;
 
-import net.amarantha.crawlspace.light.MadrixEvent;
 import net.amarantha.crawlspace.light.MadrixInterface;
 
 import java.util.*;
@@ -126,7 +125,8 @@ public class EventManager {
 
     public void stopShow() {
         running = false;
-        madrix.bulkhead().trigger();
+        madrix.bulkhead(1).trigger();
+        madrix.bulkhead(2).trigger();
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
             entry.getValue().forEach(Event::reset);
         }
@@ -134,7 +134,8 @@ public class EventManager {
 
     public void panic() {
         stopShow();
-        madrix.fullOn().trigger();
+        madrix.fullOn(1).trigger();
+        madrix.fullOn(2).trigger();
     }
 
 }
