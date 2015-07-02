@@ -38,15 +38,3 @@ h3 {
     height: 40px;
     font-family: courier;
 }
-
-.shower-block {
-    font-size:50px;
-    font-family: courier;
-    background: #008877;
-    font-weight: bold;
-    color: white;
-    width: 200px;
-    margin: auto;
-    border-radius: 20px;
-}
-

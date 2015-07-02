@@ -126,7 +126,6 @@ public class EventManager {
     public void stopShow() {
         running = false;
         madrix.bulkhead(1).trigger();
-        madrix.bulkhead(2).trigger();
         for ( Map.Entry<Long, List<Event>> entry : events.entrySet() ) {
             entry.getValue().forEach(Event::reset);
         }

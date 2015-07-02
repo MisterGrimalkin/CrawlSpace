@@ -1,6 +1,6 @@
-package net.amarantha.crawlspace.event;
+package net.amarantha.crawlspace.sound;
 
-import net.amarantha.crawlspace.sound.AudioFile;
+import net.amarantha.crawlspace.event.Event;
 
 public class AudioEvent extends Event {
 

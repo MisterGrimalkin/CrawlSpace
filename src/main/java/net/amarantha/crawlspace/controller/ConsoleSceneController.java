@@ -26,9 +26,6 @@ public class ConsoleSceneController {
                 } else
                 if ( manager.currentTimeBetween(0.0, Main.scene3Start) ) {
                     manager.jumpTo(Main.scene3Start);
-//                } else
-//                if ( manager.currentTimeBetween(45.0, 76.0) ) {
-//                    manager.jumpTo(75.5);
                 } else
                 if ( manager.getCurrentShowTime() > Main.scene3Start ) {
                     manager.stopShow();

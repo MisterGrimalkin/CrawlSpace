@@ -3,26 +3,26 @@ package net.amarantha.crawlspace.light;
 import org.javalite.http.Get;
 import org.javalite.http.Http;
 
-public class EStreamer {
+public class EStreamerInterface {
 
     private static String streamerIp;
 
     public static void setStreamerIp(String streamerIp) {
-        EStreamer.streamerIp = streamerIp;
+        EStreamerInterface.streamerIp = streamerIp;
     }
 
-    private static EStreamer instance;
+    private static EStreamerInterface instance;
 
-    public static EStreamer getInstance() {
+    public static EStreamerInterface getInstance() {
         if ( instance==null ) {
-            instance = new EStreamer(streamerIp);
+            instance = new EStreamerInterface(streamerIp);
         }
         return instance;
     }
 
     private String ip;
 
-    public EStreamer(String ip) {
+    public EStreamerInterface(String ip) {
         this.ip = ip;
     }
 

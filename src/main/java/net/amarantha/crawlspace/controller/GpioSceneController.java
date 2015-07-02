@@ -1,8 +1,6 @@
 package net.amarantha.crawlspace.controller;
 
 import com.pi4j.io.gpio.*;
-import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListener;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import net.amarantha.crawlspace.Main;
 import net.amarantha.crawlspace.event.EventManager;
@@ -24,43 +22,38 @@ public class GpioSceneController {
         bulkheadTrigger.addListener((GpioPinListenerDigital) gpioEvent -> {
             System.out.println("--> BULKHEAD " + gpioEvent.getState().getName());
             if (gpioEvent.getState()==PinState.HIGH) {
-                events.startShow();
+                if ( events.isRunning()) {
+                    events.stopShow();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    events.startShow();
+                } else {
+                    events.startShow();
+                }
             }
         });
 
         scene3Trigger.addListener((GpioPinListenerDigital) gpioEvent -> {
             System.out.println("--> SCENE 3 " + gpioEvent.getState().getName());
-            if (gpioEvent.getState()==PinState.HIGH) {
+            if (events.isRunning()
+                    && events.getCurrentShowTime()<Main.scene3Start
+                    && gpioEvent.getState()==PinState.HIGH) {
                 events.jumpTo(Main.scene3Start);
             }
         });
 
         exitTrigger.addListener((GpioPinListenerDigital) gpioEvent -> {
             System.out.println("--> FINISH " + gpioEvent.getState().getName());
-            if (gpioEvent.getState() == PinState.HIGH) {
+            if (events.isRunning() && gpioEvent.getState() == PinState.HIGH) {
                 events.stopShow();
             }
         });
 
-//        myButton1.addListener((GpioPinListenerDigital) event -> {
-//            if ( event.getState()==PinState.HIGH ) {
-//                if ( !events.isRunning() ) {
-//                    events.startShow();
-//                } else
-//                if ( events.currentTimeBetween(25.0, 44.0) ) {
-//                    events.jumpTo(43.5);
-//                } else
-//                if ( events.currentTimeBetween(45.0, 76.0) ) {
-//                    events.jumpTo(75.5);
-//                } else
-//                if ( events.getCurrentShowTime() > 76.0 ) {
-//                    events.stopShow();
-//                }
-//            }
-//        });
         System.out.println("CrawlSpace Running...........");
-        while ( true ) {
-        }
+        while ( true ) {}
 
     }
 }

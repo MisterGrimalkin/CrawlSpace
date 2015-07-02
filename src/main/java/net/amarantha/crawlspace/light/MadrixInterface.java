@@ -37,7 +37,6 @@ public class MadrixInterface {
     }
 
     public MadrixEvent event(int s, int p) { return new MadrixEvent(this, s, p);}
-
     public MadrixEvent event(String side, int s, int p) {
         return new MadrixEvent(this, side, s, p);
     }
@@ -48,48 +47,16 @@ public class MadrixInterface {
     public MadrixEvent spot23(int s) { return new MadrixEvent(this, s, 45);}
     public MadrixEvent spot234(int s) { return new MadrixEvent(this, s, 14);}
     public MadrixEvent spot345(int s) { return new MadrixEvent(this, s, 15);}
-//    public MadrixEvent spot456() { return new MadrixEvent(this, 1, 16);}
-//    public MadrixEvent spot567() { return new MadrixEvent(this, 1, 29);}
-//    public MadrixEvent spot678() { return new MadrixEvent(this, 1, 30);}
     public MadrixEvent spot789(int s) { return new MadrixEvent(this, s, 31);}
     public MadrixEvent midspot(int s) { return new MadrixEvent(this, s, 25);}
-//    public MadrixEvent spot89() { return new MadrixEvent(this, 1, 32);}
-//    public MadrixEvent spot9() { return new MadrixEvent(this, 1, 41);}
-
-
     public MadrixEvent fullLineWhiteStrobe(int s) { return new MadrixEvent(this, s, 17); }
-
-    public MadrixEvent fallingWhite(int s) {
-        return new MadrixEvent(this, s, 19);
-    }
-
-    public MadrixEvent fallingRedSlow(int s) {
-        return new MadrixEvent(this, s, 18);
-    }
-
-    public MadrixEvent fallingRedFast(int s) {
-        return new MadrixEvent(this, s, 20);
-    }
-
-    public MadrixEvent watery(int s) {
-        return new MadrixEvent(this, s, 49);
-    }
-
-    public MadrixEvent fullOn(int s) {
-        return new MadrixEvent(this, s, 5);
-    }
-
-    public MadrixEvent darkness(int s) {
-        return new MadrixEvent(this, s, 1);
-    }
-
-    public MadrixEvent wavesLow(int s) {
-        return new MadrixEvent(this, s, 2);
-    }
-
-    public MadrixEvent wavesHigh(int s) {
-        return new MadrixEvent(this, s, 2);
-    }
+    public MadrixEvent fallingWhite(int s) { return new MadrixEvent(this, s, 19); }
+    public MadrixEvent fallingRedSlow(int s) { return new MadrixEvent(this, s, 18); }
+    public MadrixEvent fallingRedFast(int s) { return new MadrixEvent(this, s, 20); }
+    public MadrixEvent fullOn(int s) { return new MadrixEvent(this, s, 5); }
+    public MadrixEvent darkness(int s) { return new MadrixEvent(this, s, 1); }
+    public MadrixEvent wavesLow(int s) { return new MadrixEvent(this, s, 2); }
+    public MadrixEvent wavesHigh(int s) { return new MadrixEvent(this, s, 2); }
 
     public Event fade(final int value) {
         return new Event() {
@@ -97,13 +64,9 @@ public class MadrixInterface {
             public void onTrigger() {
                 MadrixInterface.this.fireFade(value);
             }
-
             @Override
-            protected void onReset() {
-
-            }
+            protected void onReset() { }
         };
     }
-
 
 }

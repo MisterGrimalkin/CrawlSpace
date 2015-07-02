@@ -28,12 +28,7 @@ public class MadrixEvent extends Event {
 
     @Override
     public void onTrigger() {
-
-
         madrix.fireSceneChange(panel, s, p);
-//        if ( fadeValue!=null ) {
-//            madrix.fireFade(fadeValue);
-//        }
     }
 
     @Override
